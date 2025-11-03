@@ -22,6 +22,7 @@ import type {
   ExitRetryNode,
   HttpGraphNode,
   GraphNodeUnion,
+  SlackSearchNode,
   WorkflowGraph,
 } from '@kbn/workflows/graph';
 import {
@@ -40,6 +41,8 @@ import type { WorkflowTaskManager } from '../workflow_task_manager/workflow_task
 import { AtomicStepImpl } from './atomic_step/atomic_step_impl';
 import { EnterForeachNodeImpl, ExitForeachNodeImpl } from './foreach_step';
 import { HttpStepImpl } from './http_step';
+import { SlackSearchStepImpl } from './slack';
+
 import {
   EnterConditionBranchNodeImpl,
   EnterIfNodeImpl,
@@ -231,6 +234,13 @@ export class NodesFactory {
           stepExecutionRuntime,
           stepLogger,
           this.urlValidator,
+          this.workflowRuntime
+        );
+      case 'slack-search':
+        return new SlackSearchStepImpl(
+          node as SlackSearchNode,
+          stepExecutionRuntime,
+          stepLogger,
           this.workflowRuntime
         );
       default:
