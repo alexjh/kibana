@@ -113,6 +113,7 @@ export class NodesFactory {
       );
     }
 
+    console.log(node)
     switch (node.type) {
       case 'enter-foreach':
         return new EnterForeachNodeImpl(
@@ -220,6 +221,14 @@ export class NodesFactory {
           this.workflowTaskManager
         );
       case 'atomic':
+        if (node.configuration.type == 'slack-search') {
+          return new SlackSearchStepImpl(
+            node as SlackSearchNode,
+            stepExecutionRuntime,
+            stepLogger,
+            this.workflowRuntime
+          );
+        }
         // Default atomic step (connector-based)
         return new AtomicStepImpl(
           node as AtomicGraphNode,
@@ -234,13 +243,6 @@ export class NodesFactory {
           stepExecutionRuntime,
           stepLogger,
           this.urlValidator,
-          this.workflowRuntime
-        );
-      case 'slack-search':
-        return new SlackSearchStepImpl(
-          node as SlackSearchNode,
-          stepExecutionRuntime,
-          stepLogger,
           this.workflowRuntime
         );
       default:

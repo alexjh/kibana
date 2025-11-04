@@ -23,6 +23,7 @@ import {
   ParallelStepSchema,
   ScheduledTriggerSchema,
   WaitStepSchema,
+  SlackSearchStepSchema,
 } from '@kbn/workflows';
 import { WorkflowGraph } from '@kbn/workflows/graph';
 import { z } from '@kbn/zod';
@@ -113,6 +114,11 @@ function getBuiltInStepTypesFromSchema(): Array<{
     {
       schema: WaitStepSchema,
       description: 'Wait for a specified duration',
+      icon: monaco.languages.CompletionItemKind.Constant,
+    },
+    {
+      schema: SlackSearchStepSchema,
+      description: 'Search Slack',
       icon: monaco.languages.CompletionItemKind.Constant,
     },
   ];

@@ -106,6 +106,8 @@ export class SlackSearchStepImpl extends BaseAtomicNodeImplementation<SlackSearc
         page += 1;
       }
 
+      console.log(allMessages);
+
       return {
         input,
         output: {

@@ -136,7 +136,7 @@ export function connectorTypeRequiresConnectorId(
   dynamicConnectorTypes?: Record<string, any>
 ): boolean {
   // Built-in step types don't need connector-id
-  const builtInStepTypes = ['foreach', 'if', 'parallel', 'merge', 'http', 'wait'];
+  const builtInStepTypes = ['foreach', 'if', 'parallel', 'merge', 'http', 'wait', 'slack-search'];
   if (builtInStepTypes.includes(connectorType)) {
     return false;
   }

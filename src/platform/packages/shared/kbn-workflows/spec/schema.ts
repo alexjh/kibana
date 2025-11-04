@@ -434,6 +434,7 @@ const StepSchema = z.lazy(() =>
     ParallelStepSchema,
     MergeStepSchema,
     BaseConnectorStepSchema,
+    SlackSearchStepSchema,
   ])
 );
 export type Step = z.infer<typeof StepSchema>;
@@ -445,6 +446,7 @@ export const BuiltInStepTypes = [
   MergeStepSchema.shape.type._def.value,
   WaitStepSchema.shape.type._def.value,
   HttpStepSchema.shape.type._def.value,
+  SlackSearchStepSchema.shape.type._def.value,
 ];
 export type BuiltInStepType = (typeof BuiltInStepTypes)[number];
 
