@@ -77,7 +77,7 @@ export class SlackSearchStepImpl extends BaseAtomicNodeImplementation<SlackSearc
     const { bearerToken, query } = this.step.with;
 
     return {
-      bearerToken,
+      bearerToken: this.templatingEngine.render(bearerToken, context),
       query: this.templatingEngine.render(query, context),
     };
   }
@@ -111,6 +111,7 @@ export class SlackSearchStepImpl extends BaseAtomicNodeImplementation<SlackSearc
       return {
         input,
         output: {
+          count: allMessages.length,
           allMessages,
         },
         error: undefined,
