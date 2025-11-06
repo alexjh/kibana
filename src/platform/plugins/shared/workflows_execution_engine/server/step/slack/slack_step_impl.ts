@@ -21,6 +21,7 @@ export interface SlackSearchStep extends BaseStep {
   with: {
     bearerToken: string;
     query: string;
+    fields?: string;
     body?: any;
   };
 }
@@ -74,18 +75,19 @@ export class SlackSearchStepImpl extends BaseAtomicNodeImplementation<SlackSearc
 
   public getInput() {
     const context = this.stepExecutionRuntime.contextManager.getContext();
-    const { bearerToken, query } = this.step.with;
+    const { bearerToken, query, fields } = this.step.with;
 
     return {
       bearerToken: this.templatingEngine.render(bearerToken, context),
       query: this.templatingEngine.render(query, context),
+      fields: this.templatingEngine.render(fields || '', context),
     };
   }
 
   protected async _run(input: any): Promise<RunStepResult> {
     try {
       const pageSize = 100;
-      const { bearerToken, query } = input;
+      const { bearerToken, query, fields } = input;
       const allMessages: Array<SlackMessageMatch> = [];
       let page = 1;
       while (true) {
@@ -99,14 +101,14 @@ export class SlackSearchStepImpl extends BaseAtomicNodeImplementation<SlackSearc
         };
 
         const response: AxiosResponse = await axios<SlackMessageSearchResult>(config);
-        allMessages.push(...response.data.messages.matches.map(this.transformMessageReturn));
+        const transformer = this.transformMessageReturn(fields);
+
+        allMessages.push(...response.data.messages.matches.map(transformer));
         if (page >= response.data.messages.paging.pages) {
           break;
         }
         page += 1;
       }
-
-      console.log(allMessages);
 
       return {
         input,
@@ -147,14 +149,26 @@ export class SlackSearchStepImpl extends BaseAtomicNodeImplementation<SlackSearc
     }
   }
 
-  protected transformMessageReturn = (match: SlackMessageMatch) => ({
-    user: match.user,
-    text: match.text,
-    ts: match.ts,
-    channel: {
-      id: match.channel.id,
-      name: match.channel.name,
-    },
-    permalink: match.permalink,
-  });
+  protected transformMessageReturn = (fields?: string) => (match: SlackMessageMatch) => {
+    // First create the full normalized object
+    const full = {
+      user: match.user,
+      text: match.text,
+      ts: match.ts,
+      channel: {
+        id: match.channel.id,
+        name: match.channel.name,
+      },
+      permalink: match.permalink,
+    };
+
+    // If no field filtering requested, return full object
+    if (!fields || fields === '') return full;
+
+    // Convert comma-separated list to a Set for efficient lookup
+    const allow = new Set(fields.split(',').map((f) => f.trim()));
+
+    // Now build a filtered output object — *shallow filtering*
+    return Object.fromEntries(Object.entries(full).filter(([key]) => allow.has(key)));
+  };
 }

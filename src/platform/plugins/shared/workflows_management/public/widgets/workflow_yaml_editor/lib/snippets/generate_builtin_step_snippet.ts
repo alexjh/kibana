@@ -70,7 +70,7 @@ export function generateBuiltInStepSnippet(
       break;
     case 'slack-search':
       parameters = {
-        with: { bearerToken: '', query: '', body: '' },
+        with: { bearerToken: '', query: '', fields: '' },
       };
       break;
     case 'wait':

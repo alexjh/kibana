@@ -628,7 +628,7 @@ const staticConnectors: ConnectorContractUnion[] = [
       .object({
         bearerToken: z.string().min(1),
         query: z.string().min(1),
-        body: z.any().optional(),
+        fields: z.string().optional(),
       })
       .required(),
     outputSchema: z.string(),
