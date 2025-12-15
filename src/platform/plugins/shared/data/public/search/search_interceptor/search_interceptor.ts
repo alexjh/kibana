@@ -83,7 +83,10 @@ import { SearchResponseCache } from './search_response_cache';
 import { SearchAbortController } from './search_abort_controller';
 import type { SearchConfigSchema } from '../../../server/config';
 import type { SearchServiceStartDependencies } from '../search_service';
-import { createRequestHash } from './create_request_hash';
+import {
+  createRequestHashForBackgroundSearches,
+  createRequestHashForClientCache,
+} from './create_request_hash';
 
 export interface SearchInterceptorDeps {
   http: HttpSetup;
@@ -180,7 +183,7 @@ export class SearchInterceptor {
 
     if (!sessionId) return of(undefined); // don't use cache if doesn't belong to a session
 
-    return from(Promise.resolve(createRequestHash(hashOptions)));
+    return from(Promise.resolve(createRequestHashForClientCache(hashOptions)));
   }
 
   /*
@@ -329,6 +332,8 @@ export class SearchInterceptor {
     let isSavedToBackground =
       this.deps.session.isCurrentSession(sessionId) &&
       (this.deps.session.isSaving() || this.deps.session.isStored());
+    if (isSavedToBackground) searchAbortController.cleanup();
+
     const savedToBackgroundSub =
       this.deps.session.isCurrentSession(sessionId) &&
       this.deps.session.state$
@@ -342,6 +347,7 @@ export class SearchInterceptor {
           take(1)
         )
         .subscribe(() => {
+          searchAbortController.cleanup();
           isSavedToBackground = true;
         });
 
@@ -381,7 +387,7 @@ export class SearchInterceptor {
         id = response.id;
 
         if (!isRunningResponse(response)) {
-          searchTracker?.complete();
+          searchTracker?.complete(response);
         }
       }),
       map((response) => {
@@ -415,7 +421,7 @@ export class SearchInterceptor {
         } else {
           // Don't error out the search or cancel if it is being saved to the background
           if (!isSavedToBackground) {
-            searchTracker?.error();
+            searchTracker?.error(e);
             cancel();
           }
           return throwError(e);
@@ -439,25 +445,20 @@ export class SearchInterceptor {
    * @throws `AbortError` | `ErrorLike`
    */
   private runSearch(
-    request: IKibanaSearchRequest,
+    { params, ...request }: IKibanaSearchRequest,
     options?: ISearchOptions
   ): Promise<IKibanaSearchResponse> {
-    const { abortSignal, requestHash } = options || {};
+    const { abortSignal } = options || {};
 
-    if (request.id) {
-      // just polling an existing search, no need to send the body, just the hash
-
-      const { params, ...requestWithoutParams } = request;
-      if (params) {
-        const { body, ...paramsWithoutBody } = params;
-        request = {
-          ...requestWithoutParams,
-          params: paramsWithoutBody,
-        };
-      }
-    }
+    const requestHash = params ? createRequestHashForBackgroundSearches(params) : undefined;
 
     const { executionContext, strategy, ...searchOptions } = this.getSerializableOptions(options);
+
+    // FIXME: the dropNullColumns param shouldn't be needed during polling
+    // once https://github.com/elastic/elasticsearch/issues/138439 is resolved
+    // at that point, exclude all params when request.id is defined (polling phase)
+    const paramsToUse = request.id ? { dropNullColumns: params?.dropNullColumns } : params || {};
+
     return this.deps.http
       .post<IKibanaSearchResponse | ErrorResponseBase>(
         `/internal/search/${strategy}${request.id ? `/${request.id}` : ''}`,
@@ -466,7 +467,7 @@ export class SearchInterceptor {
           signal: abortSignal,
           context: this.deps.executionContext.withGlobalContext(executionContext),
           body: JSON.stringify({
-            ...request,
+            ...{ ...request, params: paramsToUse },
             ...searchOptions,
             requestHash,
             stream:

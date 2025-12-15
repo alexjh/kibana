@@ -10,7 +10,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 
 import { isStringLiteral } from '../ast/is';
-import { TIME_DURATION_UNITS } from '../parser/constants';
+import { TIME_DURATION_UNITS } from '../parser';
 import { LeafPrinter } from '../pretty_print';
 import type {
   ESQLAstComment,
@@ -320,10 +320,10 @@ export namespace Builder {
       export const binary = <Name extends BinaryExpressionOperator = BinaryExpressionOperator>(
         name: Name,
         args: [left: ESQLAstItem, right: ESQLAstItem],
-        template?: Omit<AstNodeTemplate<ESQLFunction>, 'subtype' | 'name' | 'operator' | 'args'>,
+        template?: Omit<AstNodeTemplate<ESQLBinaryExpression<Name>>, 'subtype' | 'name' | 'args'>,
         fromParser?: Partial<AstNodeParserFields>
       ): ESQLBinaryExpression<Name> => {
-        const operator = Builder.identifier({ name });
+        const operator = template?.operator ?? Builder.identifier({ name });
         return Builder.expression.func.node(
           { ...template, name, operator, args, subtype: 'binary-expression' },
           fromParser

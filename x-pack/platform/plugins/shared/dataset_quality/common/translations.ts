@@ -753,6 +753,14 @@ export const failedDocsErrorsColumnName = i18n.translate(
   }
 );
 
+export const failedDocsErrorsColumnNameTooltip = i18n.translate(
+  'xpack.datasetQuality.details.failedDocs.errorsTooltip',
+  {
+    defaultMessage:
+      'Sample of error messages for each error type. For more details, open the error type in Discover.',
+  }
+);
+
 export const readMore = i18n.translate(
   'xpack.datasetQuality.details.qualityIssue.flyout.message.readMore',
   {
@@ -821,5 +829,33 @@ export const enableFailureStoreButtonLabel = i18n.translate(
   'xpack.datasetQuality.enableFailureStore',
   {
     defaultMessage: 'Enable failure store',
+  }
+);
+
+export const modifyFieldValue = i18n.translate(
+  'xpack.datasetQuality.details.degradedField.possibleMitigation.modifyFieldValueLink',
+  {
+    defaultMessage: 'Modify field value',
+  }
+);
+
+export const increaseFieldCharacterLimit = i18n.translate(
+  'xpack.datasetQuality.details.degradedField.possibleMitigation.increaseFieldCharacterLimitLink',
+  {
+    defaultMessage: 'Increase field character limit',
+  }
+);
+
+export const changeFieldTypeInSchema = i18n.translate(
+  'xpack.datasetQuality.details.degradedField.possibleMitigation.changeFieldTypeInSchemaLink',
+  {
+    defaultMessage: 'Change field type in schema',
+  }
+);
+
+export const createConvertProcessor = i18n.translate(
+  'xpack.datasetQuality.details.degradedField.possibleMitigation.createConvertProcessorLink',
+  {
+    defaultMessage: 'Create a convert processor',
   }
 );
