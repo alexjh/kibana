@@ -138,25 +138,25 @@ Key files:
 - [x] Implement or adjust handling for ReactElement signatures to satisfy the test
 
 ### Phase 4.3: Improve Missing Comments Detection
-- [x] Update `collectStatsForApi` in [packages/kbn-docs-utils/src/stats.ts](packages/kbn-docs-utils/src/stats.ts):
+- [ ] Update `collectStatsForApi` in [packages/kbn-docs-utils/src/stats.ts](packages/kbn-docs-utils/src/stats.ts):
   - For destructured parameters, check if parent has comment OR properties have individual comments
   - Don't flag as missing if property-level JSDoc exists
   - Add validation for required vs. optional parameter documentation
 
 ### Phase 4.4: Add Additional Validation Rules
-- [x] Add validation for:
+- [ ] Add validation for:
   - Missing `@returns` tags on functions
   - Missing type information in JSDoc when TypeScript types are complex
   - Inconsistent JSDoc (e.g., `@param` count doesn't match function signature)
-- [x] Make validation rules configurable (surfaced via the existing `comments` check)
-- [x] Track validation output in stats snapshots (logic lives in `stats.ts`; no separate `src/validation/` directory needed)
-- [x] Emit new validation counts (missing returns, param doc mismatches, missing complex type info) to CI stats in `report_metrics.ts`
-- [x] Include line-anchored GitHub links in CLI issue tables when line numbers are available
+- [ ] Make validation rules configurable (surfaced via the existing `comments` check)
+- [ ] Track validation output in stats snapshots (logic lives in `stats.ts`; no separate `src/validation/` directory needed)
+- [ ] Emit new validation counts (missing returns, param doc mismatches, missing complex type info) to CI stats in `report_metrics.ts`
+- [ ] Include line-anchored GitHub links in CLI issue tables when line numbers are available
 
 ### Phase 4.5: Update Integration Tests
-- [x] Update fixture comments to demonstrate proper JSDoc for destructured params
-- [x] Add test cases for fixed bugs
-- [x] Verify all integration tests pass
+- [ ] Update fixture comments to demonstrate proper JSDoc for destructured params
+- [ ] Add test cases for fixed bugs
+- [ ] Verify all integration tests pass
 
 ## Phase 5: Documentation and Cleanup
 
