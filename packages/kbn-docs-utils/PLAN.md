@@ -144,14 +144,14 @@ Key files:
   - Add validation for required vs. optional parameter documentation
 
 ### Phase 4.4: Add Additional Validation Rules
-- [ ] Add validation for:
+- [x] Add validation for:
   - Missing `@returns` tags on functions
   - Missing type information in JSDoc when TypeScript types are complex
   - Inconsistent JSDoc (e.g., `@param` count doesn't match function signature)
-- [ ] Make validation rules configurable (surfaced via the existing `comments` check)
-- [ ] Track validation output in stats snapshots (logic lives in `stats.ts`; no separate `src/validation/` directory needed)
-- [ ] Emit new validation counts (missing returns, param doc mismatches, missing complex type info) to CI stats in `report_metrics.ts`
-- [ ] Include line-anchored GitHub links in CLI issue tables when line numbers are available
+- [x] Make validation rules configurable (surfaced via the existing `comments` check)
+- [x] Track validation output in stats snapshots (logic lives in `stats.ts`; no separate `src/validation/` directory needed)
+- [x] Emit new validation counts (missing returns, param doc mismatches, missing complex type info) to CI stats in `report_metrics.ts`
+- [x] Include line-anchored GitHub links in CLI issue tables when line numbers are available
 
 ### Phase 4.5: Update Integration Tests
 - [ ] Update fixture comments to demonstrate proper JSDoc for destructured params

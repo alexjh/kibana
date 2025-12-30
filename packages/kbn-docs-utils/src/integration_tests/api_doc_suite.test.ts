@@ -147,24 +147,6 @@ beforeAll(async () => {
       log,
     }),
   ]);
-
-  // Write stats snapshot alongside other generated snapshots.
-  const statsSnapshot = {
-    counts: {
-      apiCount: pluginAStats.apiCount,
-      missingExports: pluginAStats.missingExports,
-      missingComments: pluginAStats.missingComments.length,
-      isAnyType: pluginAStats.isAnyType.length,
-      noReferences: pluginAStats.noReferences.length,
-    },
-    missingComments: pluginAStats.missingComments.map(mapStat),
-    isAnyType: pluginAStats.isAnyType.map(mapStat),
-    noReferences: pluginAStats.noReferences.map(mapStat),
-  };
-  fs.writeFileSync(
-    Path.resolve(mdxOutputFolder, 'plugin_a.stats.json'),
-    JSON.stringify(statsSnapshot, null, 2) + '\n'
-  );
 });
 
 it('Stats', () => {
@@ -932,16 +914,47 @@ describe('validation and stats', () => {
       expect(pluginAStats.apiCount).toBeGreaterThanOrEqual(totalApis);
     });
 
-    it('captures stats snapshot', () => {
-      // Stats snapshot is written in beforeAll alongside other snapshots.
-      // This test verifies the snapshot file was created and matches.
-      const snapshotPath = Path.resolve(__dirname, 'snapshots', 'plugin_a.stats.json');
-      const snapshot = JSON.parse(fs.readFileSync(snapshotPath, 'utf8'));
+    it('captures stats snapshot (full data, file-based)', () => {
+      const {
+        missingComments,
+        noReferences,
+        isAnyType,
+        missingReturns,
+        paramDocMismatches,
+        missingComplexTypeInfo,
+        apiCount,
+        missingExports,
+      } = pluginAStats;
 
-      expect(snapshot.counts.apiCount).toBe(pluginAStats.apiCount);
-      expect(snapshot.counts.missingComments).toBe(pluginAStats.missingComments.length);
-      expect(snapshot.counts.isAnyType).toBe(pluginAStats.isAnyType.length);
-      expect(snapshot.counts.noReferences).toBe(pluginAStats.noReferences.length);
+      const snapshotPath = Path.resolve(__dirname, 'snapshots', 'plugin_a.stats.json');
+      const computed = {
+        counts: {
+          apiCount,
+          missingExports,
+          missingComments: missingComments.length,
+          isAnyType: isAnyType.length,
+          noReferences: noReferences.length,
+        },
+        missingComments: missingComments.map(mapStat),
+        isAnyType: isAnyType.map(mapStat),
+        noReferences: noReferences.map(mapStat),
+        missingReturns: missingReturns.map(mapStat),
+        paramDocMismatches: paramDocMismatches.map(mapStat),
+        missingComplexTypeInfo: missingComplexTypeInfo.map(mapStat),
+      };
+
+      const snapshotState = expect.getState().snapshotState;
+      const shouldUpdate =
+        snapshotState?._updateSnapshot === 'all' ||
+        process.env.UPDATE_SNAPSHOTS === '1' ||
+        !fs.existsSync(snapshotPath);
+
+      if (shouldUpdate) {
+        fs.writeFileSync(snapshotPath, JSON.stringify(computed, null, 2));
+      }
+
+      const snapshot = JSON.parse(fs.readFileSync(snapshotPath, 'utf8'));
+      expect(computed).toEqual(snapshot);
     });
   });
 

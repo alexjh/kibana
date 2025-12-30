@@ -27,6 +27,9 @@ export function collectApiStatsForPlugin(
     missingComments: [],
     isAnyType: [],
     noReferences: [],
+    missingReturns: [],
+    paramDocMismatches: [],
+    missingComplexTypeInfo: [],
     deprecatedAPIsReferencedCount: 0,
     unreferencedDeprecatedApisCount: 0,
     adoptionTrackedAPIs: [],
@@ -78,6 +81,10 @@ function collectStatsForApi(doc: ApiDeclaration, stats: ApiStats, pluginApi: Plu
     stats.missingComments.push(doc);
   }
 
+  trackMissingReturns(doc, stats);
+  trackParamDocMismatches(doc, stats);
+  trackMissingComplexTypeInfo(doc, stats);
+
   if (doc.type === TypeKind.AnyKind) {
     stats.isAnyType.push(doc);
   }
@@ -88,6 +95,70 @@ function collectStatsForApi(doc: ApiDeclaration, stats: ApiStats, pluginApi: Plu
   }
   if (!doc.references || doc.references.length === 0) {
     stats.noReferences.push(doc);
+  }
+}
+
+function isFunctionLike(doc: ApiDeclaration): boolean {
+  if (doc.type === TypeKind.FunctionKind) return true;
+  if (doc.signature) {
+    const sig = doc.signature.map((part) => (typeof part === 'string' ? part : part.text)).join('');
+    return sig.includes('=>');
+  }
+  return false;
+}
+
+/**
+ * Checks if a function signature indicates a void return type.
+ * This includes:
+ * - Explicit `=> void` or `: void`
+ * - Explicit `=> undefined`
+ * - Promise<void> or Promise<undefined>
+ */
+function isVoidReturn(signature: ApiDeclaration['signature']): boolean {
+  if (!signature) return false;
+  const sig = signature.map((part) => (typeof part === 'string' ? part : part.text)).join('');
+
+  // Explicit void or undefined return
+  if (/=>\s*void\b|:\s*void\b/.test(sig)) return true;
+  if (/=>\s*undefined\b/.test(sig)) return true;
+
+  // Promise<void> or Promise<undefined>
+  if (/=>\s*Promise<void>/.test(sig)) return true;
+  if (/=>\s*Promise<undefined>/.test(sig)) return true;
+
+  return false;
+}
+
+function trackMissingReturns(doc: ApiDeclaration, stats: ApiStats) {
+  if (!isFunctionLike(doc)) return;
+  if (isVoidReturn(doc.signature)) return;
+  const hasReturnComment = doc.returnComment !== undefined && doc.returnComment.length > 0;
+  if (!hasReturnComment) {
+    stats.missingReturns.push(doc);
+  }
+}
+
+function trackParamDocMismatches(doc: ApiDeclaration, stats: ApiStats) {
+  if (!isFunctionLike(doc)) return;
+  if (!doc.children || doc.children.length === 0) return;
+  const describedParams = doc.children.filter(
+    (param) => param.description && param.description.length > 0
+  ).length;
+  if (describedParams !== doc.children.length) {
+    stats.paramDocMismatches.push(doc);
+  }
+}
+
+function trackMissingComplexTypeInfo(doc: ApiDeclaration, stats: ApiStats) {
+  const complexKinds = new Set<TypeKind>([
+    TypeKind.ObjectKind,
+    TypeKind.InterfaceKind,
+    TypeKind.CompoundTypeKind,
+  ]);
+  if (!complexKinds.has(doc.type)) return;
+  const hasDescription = doc.description !== undefined && doc.description.length > 0;
+  if (!hasDescription) {
+    stats.missingComplexTypeInfo.push(doc);
   }
 }
 

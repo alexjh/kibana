@@ -293,6 +293,9 @@ export interface ApiStats {
   missingComments: ApiDeclaration[];
   isAnyType: ApiDeclaration[];
   noReferences: ApiDeclaration[];
+  missingReturns: ApiDeclaration[];
+  paramDocMismatches: ApiDeclaration[];
+  missingComplexTypeInfo: ApiDeclaration[];
   apiCount: number;
   missingExports: number;
   deprecatedAPIsReferencedCount: number;

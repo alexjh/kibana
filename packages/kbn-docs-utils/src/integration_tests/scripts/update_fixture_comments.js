@@ -7,35 +7,26 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-const fs = require('node:fs');
-const path = require('node:path');
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const categories = [
   { key: 'missingComments', title: 'missing comments' },
+  { key: 'missingReturns', title: 'missing returns' },
+  { key: 'paramDocMismatches', title: 'param doc mismatches' },
+  { key: 'missingComplexTypeInfo', title: 'missing complex type info' },
   { key: 'isAnyType', title: 'any usage' },
   { key: 'noReferences', title: 'no references' },
 ];
 
-/**
- * Reads stats from the snapshot JSON file.
- */
-const readStatsFromSnapshot = () => {
-  const snapshotPath = path.resolve(
-    __dirname,
-    '../src/integration_tests/snapshots/plugin_a.stats.json'
-  );
-
-  if (!fs.existsSync(snapshotPath)) {
-    console.error(`Stats snapshot file not found: ${snapshotPath}`);
-    console.error('Run the integration tests first to generate the snapshot.');
-    process.exit(1);
-  }
-
-  return JSON.parse(fs.readFileSync(snapshotPath, 'utf8'));
-};
+const readJson = (filePath) => JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
 const normalizePath = (statPath) =>
-  path.resolve(__dirname, '..', statPath.replace(/^packages\/kbn-docs-utils\//, ''));
+  path.resolve(__dirname, '../..', statPath.replace(/^packages\/kbn-docs-utils\//, ''));
 
 const emptyCategories = () =>
   categories.reduce((acc, { key }) => {
@@ -59,14 +50,11 @@ const groupByFile = (stats) => {
 const formatCategory = (title, entries) => {
   const count = entries.length;
   const lines = [`//   ${title} (${count}):`];
-  const sorted = [...entries].sort((a, b) => {
-    const lineA = a.lineNumber ?? Number.MAX_SAFE_INTEGER;
-    const lineB = b.lineNumber ?? Number.MAX_SAFE_INTEGER;
-    return lineA === lineB ? a.label.localeCompare(b.label) : lineA - lineB;
-  });
+  const sorted = [...entries].sort((a, b) =>
+    a.lineNumber === b.lineNumber ? a.label.localeCompare(b.label) : a.lineNumber - b.lineNumber
+  );
   sorted.forEach((entry) => {
-    const lineInfo = entry.lineNumber != null ? `line ${entry.lineNumber}` : 'unknown line';
-    lines.push(`//     ${lineInfo} - ${entry.label}`);
+    lines.push(`//     line ${entry.lineNumber} - ${entry.label}`);
   });
   return lines.join('\n');
 };
@@ -97,7 +85,14 @@ const replaceBlock = (content, block) => {
 };
 
 const main = () => {
-  const stats = readStatsFromSnapshot();
+  const defaultPath = path.resolve(__dirname, '../snapshots/plugin_a.stats.json');
+
+  if (!fs.existsSync(defaultPath)) {
+    console.error(`Stats file not found: ${defaultPath}.`);
+    process.exit(1);
+  }
+
+  const stats = readJson(defaultPath);
   const byFile = groupByFile(stats);
 
   byFile.forEach((fileStats, absPath) => {
