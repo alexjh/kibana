@@ -124,39 +124,39 @@ Key files:
 ## Phase 4: Fix Bugs and Fill Gaps
 
 ### Phase 4.1: Fix Destructured Parameter Validation
-- [ ] Update `getJSDocParamComment` in [packages/kbn-docs-utils/src/build_api_declarations/js_doc_utils.ts](packages/kbn-docs-utils/src/build_api_declarations/js_doc_utils.ts):
+- [x] Update `getJSDocParamComment` in [packages/kbn-docs-utils/src/build_api_declarations/js_doc_utils.ts](packages/kbn-docs-utils/src/build_api_declarations/js_doc_utils.ts):
   - Support dot notation (`obj.prop`) for property-level tags
   - Handle nested property access (`obj.nested.prop`)
   - Match JSDoc spec: https://jsdoc.app/tags-param#parameters-with-properties
-- [ ] Update `buildApiDecsForParameters` in [packages/kbn-docs-utils/src/build_api_declarations/build_parameter_decs.ts](packages/kbn-docs-utils/src/build_api_declarations/build_parameter_decs.ts):
+- [x] Update `buildApiDecsForParameters` in [packages/kbn-docs-utils/src/build_api_declarations/build_parameter_decs.ts](packages/kbn-docs-utils/src/build_api_declarations/build_parameter_decs.ts):
   - For destructured params, check for property-level JSDoc tags
   - Only flag missing comments if parent param AND property-level tags are missing
   - Handle nested destructuring patterns
 
 ### Phase 4.2: ReactElement Signature Skipped Test
-- [ ] Unskip and fix `Test ReactElement signature` in [packages/kbn-docs-utils/src/build_api_declarations/build_api_declaration.test.ts](packages/kbn-docs-utils/src/build_api_declarations/build_api_declaration.test.ts)
-- [ ] Implement or adjust handling for ReactElement signatures to satisfy the test
+- [x] Unskip and fix `Test ReactElement signature` in [packages/kbn-docs-utils/src/build_api_declarations/build_api_declaration.test.ts](packages/kbn-docs-utils/src/build_api_declarations/build_api_declaration.test.ts)
+- [x] Implement or adjust handling for ReactElement signatures to satisfy the test
 
 ### Phase 4.3: Improve Missing Comments Detection
-- [ ] Update `collectStatsForApi` in [packages/kbn-docs-utils/src/stats.ts](packages/kbn-docs-utils/src/stats.ts):
+- [x] Update `collectStatsForApi` in [packages/kbn-docs-utils/src/stats.ts](packages/kbn-docs-utils/src/stats.ts):
   - For destructured parameters, check if parent has comment OR properties have individual comments
   - Don't flag as missing if property-level JSDoc exists
   - Add validation for required vs. optional parameter documentation
 
 ### Phase 4.4: Add Additional Validation Rules
-- [ ] Add validation for:
+- [x] Add validation for:
   - Missing `@returns` tags on functions
   - Missing type information in JSDoc when TypeScript types are complex
   - Inconsistent JSDoc (e.g., `@param` count doesn't match function signature)
-- [ ] Make validation rules configurable (surfaced via the existing `comments` check)
-- [ ] Track validation output in stats snapshots (logic lives in `stats.ts`; no separate `src/validation/` directory needed)
-- [ ] Emit new validation counts (missing returns, param doc mismatches, missing complex type info) to CI stats in `report_metrics.ts`
-- [ ] Include line-anchored GitHub links in CLI issue tables when line numbers are available
+- [x] Make validation rules configurable (surfaced via the existing `comments` check)
+- [x] Track validation output in stats snapshots (logic lives in `stats.ts`; no separate `src/validation/` directory needed)
+- [x] Emit new validation counts (missing returns, param doc mismatches, missing complex type info) to CI stats in `report_metrics.ts`
+- [x] Include line-anchored GitHub links in CLI issue tables when line numbers are available
 
 ### Phase 4.5: Update Integration Tests
-- [ ] Update fixture comments to demonstrate proper JSDoc for destructured params
-- [ ] Add test cases for fixed bugs
-- [ ] Verify all integration tests pass
+- [x] Update fixture comments to demonstrate proper JSDoc for destructured params
+- [x] Add test cases for fixed bugs
+- [x] Verify all integration tests pass
 
 ## Phase 5: Documentation and Cleanup
 
