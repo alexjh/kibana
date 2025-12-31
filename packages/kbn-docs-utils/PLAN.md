@@ -192,18 +192,18 @@ Key files:
 - [x] Document the file schema and location in `README.md`.
 
 ### Phase 6.2: MCP Tools for Documentation Checking and Fixing
-- [ ] Create `check_package_docs` MCP tool for quick validation checks:
+- [x] Create `check_package_docs` MCP tool for quick validation checks:
   - Returns pass/fail status with issue counts.
   - Lightweight for initial assessment.
-- [ ] Create `fix_package_docs` MCP tool for detailed issue reporting:
+- [x] Create `fix_package_docs` MCP tool for detailed issue reporting:
   - Runs CLI internally to generate fresh stats.
   - Groups issues by file with source snippets (3 lines context).
   - Provides mechanical templates (`@returns {TYPE}`, `@param {TYPE} name -`) for agent to complete.
   - Supports filtering by issue type.
   - Supports filtering by individual file path (infers package automatically).
-- [ ] Both tools registered in `kbn-mcp-dev-server`.
-- [ ] Tested on `@kbn/docs-utils` and `@kbn/content-management-content-editor`.
-- [ ] Add usage docs and basic tests for the MCP tools.
+- [x] Both tools registered in `kbn-mcp-dev-server`.
+- [x] Tested on `@kbn/docs-utils` and `@kbn/content-management-content-editor`.
+- [x] Add usage docs and basic tests for the MCP tools.
 
 ## Phase 7: Improve Performance of Single Package Builds and Validation
 
