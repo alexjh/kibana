@@ -171,16 +171,16 @@ Key files:
 ## Phase 5: Documentation and Cleanup
 
 ### Phase 5.1: Update Documentation
-- [ ] Update [packages/kbn-docs-utils/src/README.md](packages/kbn-docs-utils/src/README.md) with:
+- [x] Update [packages/kbn-docs-utils/src/README.md](packages/kbn-docs-utils/src/README.md) with:
   - New CLI usage
   - Validation rules and standards
   - Examples of proper JSDoc for destructured parameters
 
 ### Phase 5.2: Final Testing
-- [ ] Run full test suite
-- [ ] Test CLI commands with real plugins
-- [ ] Verify backward compatibility
-- [ ] Check for any regressions
+- [x] Run full test suite
+- [x] Test CLI commands with real plugins
+- [x] Verify backward compatibility
+- [x] Check for any regressions
 
 ## Phase 6: Flat Stats Output and MCP Auto-Fix Tooling
 

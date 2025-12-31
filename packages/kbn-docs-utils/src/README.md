@@ -43,18 +43,3 @@ const greet = ({ name, nested: { emphasis } }: { name: string; nested: { emphasi
   return emphasis ? `Hello, ${name}!` : `Hello, ${name}.`;
 };
 ```
-node scripts/build_api_docs
-```
-
-To validate documentation without writing files, run
-
-```
-node scripts/check_package_docs --plugin <pluginId>
-```
-
-You can also use `--package` as an alias for `--plugin`. Validation flags:
-
-- `--check <any|comments|exports|all>` (optional, defaults to `all`).
-- You may pass multiple `--check` flags to combine specific checks.
-
-The `--stats` flag on `build_api_docs` is deprecated and routes to `check_package_docs`.
