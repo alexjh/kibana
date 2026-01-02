@@ -38,8 +38,13 @@ export async function collectStats(
   options: CliOptions
 ): Promise<AllPluginStats> {
   const { plugins, pathsByPlugin } = setupResult;
-  const { pluginApiMap, missingApiItems, referencedDeprecations, adoptionTrackedAPIs } =
-    apiMapResult;
+  const {
+    pluginApiMap,
+    missingApiItems,
+    referencedDeprecations,
+    adoptionTrackedAPIs,
+    unnamedExports,
+  } = apiMapResult;
 
   const allPluginStats: AllPluginStats = {};
 
@@ -65,7 +70,8 @@ export async function collectStats(
         pluginApi,
         missingApiItems,
         referencedDeprecations,
-        adoptionTrackedAPIs
+        adoptionTrackedAPIs,
+        unnamedExports
       ),
       owner: plugin.manifest.owner,
       description: plugin.manifest.description,

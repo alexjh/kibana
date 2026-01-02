@@ -158,6 +158,16 @@ Key files:
 - [x] Add test cases for fixed bugs
 - [x] Verify all integration tests pass
 
+### Phase 4.6: Unnamed Exports Validator
+- [x] Add `UnnamedExport` type to [packages/kbn-docs-utils/src/types.ts](packages/kbn-docs-utils/src/types.ts) to track exports without names
+- [x] Update `getDeclarationNodesForPluginScope` in [packages/kbn-docs-utils/src/get_declaration_nodes_for_plugin.ts](packages/kbn-docs-utils/src/get_declaration_nodes_for_plugin.ts):
+  - Return `DeclarationNodesResult` containing both nodes and unnamed exports
+  - Detect and collect unnamed exports during node extraction
+- [x] Update `getPluginApi` in [packages/kbn-docs-utils/src/get_plugin_api.ts](packages/kbn-docs-utils/src/get_plugin_api.ts) to propagate unnamed exports
+- [x] Add `unnamed` check to `check_package_docs_cli.ts` validation
+- [x] Update CLI flag parsing to support `--check unnamed`
+- [x] Add tests for unnamed export detection
+
 ## Phase 5: Documentation and Cleanup
 
 ### Phase 5.1: Update Documentation

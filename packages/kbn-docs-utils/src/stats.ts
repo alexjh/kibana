@@ -14,6 +14,7 @@ import {
   type MissingApiItemMap,
   type PluginApi,
   type ReferencedDeprecationsByPlugin,
+  type UnnamedExportsByPlugin,
   TypeKind,
 } from './types';
 
@@ -21,7 +22,8 @@ export function collectApiStatsForPlugin(
   doc: PluginApi,
   missingApiItems: MissingApiItemMap,
   deprecations: ReferencedDeprecationsByPlugin,
-  adoptionTrackedAPIs: AdoptionTrackedAPIsByPlugin
+  adoptionTrackedAPIs: AdoptionTrackedAPIsByPlugin,
+  unnamedExportsByPlugin: UnnamedExportsByPlugin
 ): ApiStats {
   const stats: ApiStats = {
     missingComments: [],
@@ -37,6 +39,7 @@ export function collectApiStatsForPlugin(
     adoptionTrackedAPIsUnreferencedCount: 0,
     apiCount: countApiForPlugin(doc),
     missingExports: Object.values(missingApiItems[doc.id] ?? {}).length,
+    unnamedExports: unnamedExportsByPlugin[doc.id] || [],
   };
   Object.values(doc.client).forEach((def) => {
     collectStatsForApi(def, stats, doc);

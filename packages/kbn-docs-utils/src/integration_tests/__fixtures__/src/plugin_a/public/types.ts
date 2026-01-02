@@ -83,6 +83,8 @@ export interface OverloadedFunction {
    * @param input A number to double.
    * @returns The doubled value.
    */
+  // Intentionally separate overloads to test docs tooling handling of overloaded function types.
+  // eslint-disable-next-line @typescript-eslint/unified-signatures
   (input: number): number;
   /**
    * Parse an array of strings.
