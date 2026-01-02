@@ -64,6 +64,43 @@ export interface MyProps {
 
 export type AReactElementFn = () => ReactElement<MyProps>;
 
+/**
+ * A function type with multiple call signatures (overloads).
+ * This demonstrates handling of overloaded function types.
+ *
+ * @param input The input value to process.
+ * @returns The processed result.
+ */
+export interface OverloadedFunction {
+  /**
+   * Parse a string and return a number.
+   * @param input A string to parse.
+   * @returns The parsed number.
+   */
+  (input: string): number;
+  /**
+   * Double a number.
+   * @param input A number to double.
+   * @returns The doubled value.
+   */
+  (input: number): number;
+  /**
+   * Parse an array of strings.
+   * @param input An array of strings to parse.
+   * @returns An array of parsed numbers.
+   */
+  (input: string[]): number[];
+}
+
+/**
+ * A variable typed with the overloaded function.
+ */
+export const overloadedFn: OverloadedFunction = ((input: string | number | string[]) => {
+  if (typeof input === 'string') return parseInt(input, 10);
+  if (typeof input === 'number') return input * 2;
+  return input.map((s) => parseInt(s, 10));
+}) as OverloadedFunction;
+
 // Expected issues:
 //   missing comments (14):
 //     line 19 - TypeWithGeneric

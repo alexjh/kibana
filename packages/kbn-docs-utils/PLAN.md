@@ -154,9 +154,9 @@ Key files:
 - [x] Include line-anchored GitHub links in CLI issue tables when line numbers are available
 
 ### Phase 4.5: Update Integration Tests
-- [ ] Update fixture comments to demonstrate proper JSDoc for destructured params
-- [ ] Add test cases for fixed bugs
-- [ ] Verify all integration tests pass
+- [x] Update fixture comments to demonstrate proper JSDoc for destructured params
+- [x] Add test cases for fixed bugs
+- [x] Verify all integration tests pass
 
 ## Phase 5: Documentation and Cleanup
 
