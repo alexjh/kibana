@@ -21,7 +21,7 @@ export async function buildWebpackPackages({ log, quiet, dist }: TaskContext) {
     : ['inherit', 'inherit', 'inherit'];
 
   const args = ['kbn', 'build-shared'];
-  if (quiet) args.push('--quiet');
+  // if (quiet) args.push('--quiet');
   if (dist) args.push('--dist');
 
   await execa('yarn', args, { cwd: REPO_ROOT, stdio });

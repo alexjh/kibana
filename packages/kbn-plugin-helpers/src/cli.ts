@@ -20,7 +20,7 @@ import { resolveKibanaVersion } from './resolve_kibana_version';
 import { loadConfig } from './config';
 
 export function runCli() {
-  new RunWithCommands({
+  return new RunWithCommands({
     description: 'Some helper tasks for plugin-authors',
   })
     .command({

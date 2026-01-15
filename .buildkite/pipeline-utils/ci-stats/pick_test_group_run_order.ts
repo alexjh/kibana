@@ -161,11 +161,17 @@ export async function pickTestGroupRunOrder() {
   };
 
   const jestUnitConfigsWithEmpties = LIMIT_CONFIG_TYPE.includes('unit')
-    ? globby.sync(getJestConfigGlobs(['**/jest.config.js', '!**/__fixtures__/**']), {
-        cwd: process.cwd(),
-        absolute: false,
-        ignore: [...DISABLED_JEST_CONFIGS, '**/node_modules/**'],
-      })
+    ? globby.sync(
+        getJestConfigGlobs([
+          '**/packages/kbn-plugin-helpers/jest.integration.config.js',
+          '!**/__fixtures__/**',
+        ]),
+        {
+          cwd: process.cwd(),
+          absolute: false,
+          ignore: [...DISABLED_JEST_CONFIGS, '**/node_modules/**'],
+        }
+      )
     : [];
   const jestUnitConfigs = await filterEmptyJestConfigs(
     jestUnitConfigsWithEmpties,
