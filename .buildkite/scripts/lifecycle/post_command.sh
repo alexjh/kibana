@@ -44,6 +44,12 @@ if [[ "$IS_TEST_EXECUTION_STEP" == "true" ]]; then
   buildkite-agent artifact upload '.es/es*.log'
   buildkite-agent artifact upload '.es/uiam*.log'
 
+  if [[ "${BUILDKITE_LABEL:-}" == "Jest Tests" ]]; then
+    tar -czf cache.tar.gz -C .moon/cache .
+    buildkite-agent artifact upload "cache.tar.gz"
+    rm -f "cache.tar.gz"
+  fi
+
   if [[ $BUILDKITE_COMMAND_EXIT_STATUS -ne 0 ]]; then
     if [[ $BUILDKITE_TRIGGERED_FROM_BUILD_PIPELINE_SLUG == 'elasticsearch-serverless-intake' ]]; then
       echo "--- Run Failed Test Reporter (only junit)"

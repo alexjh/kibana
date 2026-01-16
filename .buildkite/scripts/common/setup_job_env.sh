@@ -15,6 +15,8 @@ source .buildkite/scripts/common/util.sh
 # setup/sync actions in the future, we will need to remove or conditionally set this variable.
 export MOON_NO_ACTIONS=true
 
+export PATH="$PATH:./node_modules/.bin"
+
 # Set up general-purpose tokens and credentials
 {
   BUILDKITE_TOKEN="$(vault_get buildkite-ci buildkite_token_all_jobs)"
