@@ -32,7 +32,7 @@ export const command = {
     log.info('building shared packages with webpack');
     await run(
       'moon',
-      [':build-webpack'].concat(!cache ? ['-u'] : []).concat(dist ? ['--', '--dist'] : []),
+      ['run', ':build-webpack'].concat(!cache ? ['-u'] : []).concat(dist ? ['--', '--dist'] : []),
       {
         pipe: !quiet,
         env: {

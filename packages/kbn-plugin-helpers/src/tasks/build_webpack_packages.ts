@@ -20,9 +20,9 @@ export async function buildWebpackPackages({ log, quiet, dist }: TaskContext) {
     ? ['ignore', 'pipe', 'pipe']
     : ['inherit', 'inherit', 'inherit'];
 
-  const args = ['kbn', 'build-shared'];
+  const args = ['run', ':build-webpack'];
   // if (quiet) args.push('--quiet');
-  if (dist) args.push('--dist');
+  if (dist) args.push('--', '--dist');
 
-  await execa('yarn', args, { cwd: REPO_ROOT, stdio });
+  await execa('moon', args, { cwd: REPO_ROOT, stdio });
 }
