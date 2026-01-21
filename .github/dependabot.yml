@@ -14,3 +14,10 @@ updates:
       interval: "weekly"
     target-branch: "8.19"
     open-pull-requests-limit: 0
+
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    target-branch: "8.18"
+    open-pull-requests-limit: 0
