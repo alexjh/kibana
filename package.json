@@ -1346,7 +1346,7 @@
     "jsonwebtoken": "9.0.2",
     "jsts": "1.6.2",
     "kea": "2.6.0",
-    "langchain": "0.3.35",
+    "langchain": "0.3.37",
     "langsmith": "0.3.72",
     "launchdarkly-js-client-sdk": "3.9.0",
     "liquidjs": "10.24.0",
